@@ -209,7 +209,7 @@ class Template
         }
 
         $rowStart = $this->findRowStart($tagPos);
-        $rowEnd = $this->findRowEnd($tagPos);
+        $rowEnd = $this->findRowEnd($rowStart);
         if ($tagPos >  $rowEnd) {
             throw new NotFoundRowException('Template variable not in row');
         }
@@ -449,7 +449,7 @@ class Template
             $rowStart = strrpos($this->documentXML, "<w:tr>", ((strlen($this->documentXML) - $offset) * -1));
         }
         if (!$rowStart) {
-            throw new Exception("Can not find the start position of the row to clone.");
+            throw new NotFoundRowException("Can not find the start position of the row to clone.");
         }
         return $rowStart;
     }
@@ -462,7 +462,12 @@ class Template
      */
     private function findRowEnd($offset)
     {
-        $rowEnd = strpos($this->documentXML, "</w:tr>", $offset) + 7;
+        $needle = '</w:tr>';
+		$rowEnd = strpos($this->documentXML, $needle, $offset);
+		if (!$rowEnd) {
+			throw new NotFoundRowException("Can not find the end position of the row to clone.");
+		}
+		$rowEnd += strlen($needle);
         return $rowEnd;
     }
 
