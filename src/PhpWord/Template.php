@@ -463,11 +463,11 @@ class Template
     private function findRowEnd($offset)
     {
         $needle = '</w:tr>';
-		$rowEnd = strpos($this->documentXML, $needle, $offset);
-		if (!$rowEnd) {
-			throw new NotFoundRowException("Can not find the end position of the row to clone.");
-		}
-		$rowEnd += strlen($needle);
+        $rowEnd = strpos($this->documentXML, $needle, $offset);
+        if (!$rowEnd) {
+            throw new NotFoundRowException("Can not find the end position of the row to clone.");
+        }
+        $rowEnd += strlen($needle);
         return $rowEnd;
     }
 
