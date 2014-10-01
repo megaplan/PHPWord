@@ -410,7 +410,7 @@ class Template
     {
         preg_match_all('|'.$this->getLeftTagRegexp('|').'(.*?)'.$this->getRightTagRegexp('|').'|i', $documentPartXML, $matches);
 
-        return $matches[1];
+	    return $matches[mb_strlen($this->tagVariableLeft)];
     }
 
     /**
@@ -502,7 +502,13 @@ class Template
      */
     protected function getLeftTagRegexp($delimiter = null)
     {
-        return preg_quote($this->tagVariableLeft, $delimiter).'\s*';
+	    $regExp = '';
+	    // Between characters expressions can be tags
+	    foreach (str_split($this->tagVariableLeft) as $char) {
+		    $regExp .= $regExp ? '(<[^>]*>)*' : '';
+		    $regExp .= preg_quote($char, $delimiter);
+	    }
+	    return $regExp . '\s*';
     }
 
     /**
@@ -514,7 +520,13 @@ class Template
      */
     protected function getRightTagRegexp($delimiter = null)
     {
-        return '\s*'.preg_quote($this->tagVariableRight, $delimiter);
+	    $regExp = '';
+	    // Between characters expressions can be tags
+	    foreach (str_split($this->tagVariableRight) as $char) {
+		    $regExp .= $regExp ? '(<[^>]*>)*' : '';
+		    $regExp .= preg_quote($char, $delimiter);
+	    }
+	    return '\s*' . $regExp;
     }
 
     /**
