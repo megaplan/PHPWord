@@ -504,9 +504,9 @@ class Template
     {
 	    $regExp = '';
 	    // Between characters expressions can be tags
-	    foreach (str_split($this->tagVariableLeft) as $v) {
+	    foreach (str_split($this->tagVariableLeft) as $char) {
 		    $regExp .= $regExp ? '(<[^>]*>)*' : '';
-		    $regExp .= preg_quote($v, $delimiter);
+		    $regExp .= preg_quote($char, $delimiter);
 	    }
 	    return $regExp . '\s*';
     }
@@ -522,9 +522,9 @@ class Template
     {
 	    $regExp = '';
 	    // Between characters expressions can be tags
-	    foreach (str_split($this->tagVariableRight) as $v) {
+	    foreach (str_split($this->tagVariableRight) as $char) {
 		    $regExp .= $regExp ? '(<[^>]*>)*' : '';
-		    $regExp .= preg_quote($v, $delimiter);
+		    $regExp .= preg_quote($char, $delimiter);
 	    }
 	    return '\s*' . $regExp;
     }
