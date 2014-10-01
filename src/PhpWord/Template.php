@@ -503,7 +503,7 @@ class Template
     protected function getLeftTagRegexp($delimiter = null)
     {
 	    $regExp = '';
-	    //Between characters expressions can be tags
+	    // Between characters expressions can be tags
 	    foreach (str_split($this->tagVariableLeft) as $v) {
 		    $regExp .= $regExp ? '(<[^>]*>)*' : '';
 		    $regExp .= preg_quote($v, $delimiter);
@@ -521,7 +521,7 @@ class Template
     protected function getRightTagRegexp($delimiter = null)
     {
 	    $regExp = '';
-	    //Between characters expressions can be tags
+	    // Between characters expressions can be tags
 	    foreach (str_split($this->tagVariableRight) as $v) {
 		    $regExp .= $regExp ? '(<[^>]*>)*' : '';
 		    $regExp .= preg_quote($v, $delimiter);
