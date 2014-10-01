@@ -410,7 +410,7 @@ class Template
     {
         preg_match_all('|'.$this->getLeftTagRegexp('|').'(.*?)'.$this->getRightTagRegexp('|').'|i', $documentPartXML, $matches);
 
-        return $matches[mb_strlen($this->getLeftTagRegexp)];
+	    return $matches[mb_strlen($this->tagVariableLeft)];
     }
 
     /**
@@ -503,12 +503,12 @@ class Template
     protected function getLeftTagRegexp($delimiter = null)
     {
 	    $regExp = '';
-		//Между символами выражения могут быть теги
-	    foreach( $this->tagVariableLeft as $v ) {
-		    $regExp .= $regExp ? '(\<[^'.$v.']*\>)?' : '';
-		    $regExp .= $v;
+	    //Between characters expressions can be tags
+	    foreach (str_split($this->tagVariableLeft) as $v) {
+		    $regExp .= $regExp ? '(<[^>]*>)*' : '';
+		    $regExp .= preg_quote($v, $delimiter);
 	    }
-	    return preg_quote($regExp, $delimiter).'\s*';
+	    return $regExp . '\s*';
     }
 
     /**
@@ -521,12 +521,12 @@ class Template
     protected function getRightTagRegexp($delimiter = null)
     {
 	    $regExp = '';
-	    //Между символами выражения могут быть теги
-	    foreach( $this->tagVariableRight as $v ) {
-		    $regExp .= $regExp ? '(\<[^'.$v.']*\>)?' : '';
-		    $regExp .= $v;
+	    //Between characters expressions can be tags
+	    foreach (str_split($this->tagVariableRight) as $v) {
+		    $regExp .= $regExp ? '(<[^>]*>)*' : '';
+		    $regExp .= preg_quote($v, $delimiter);
 	    }
-	    return '\s*'.preg_quote($regExp, $delimiter);
+	    return '\s*' . $regExp;
     }
 
     /**
