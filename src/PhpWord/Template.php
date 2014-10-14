@@ -249,7 +249,7 @@ class Template
         $right = $this->getRightTagRegexp('|');
         $regExpPattern = '|'.$left.'(.*?)'.$right.'|';
         for ($i = 1; $i <= $numberOfClones; $i++) {
-            $result .= preg_replace($regExpPattern, $this->tagVariableLeft . '\\1#' . $i . $this->tagVariableRight, $xmlRow);
+            $result .= preg_replace($regExpPattern, $this->tagVariableLeft . '\\'.mb_strlen($this->tagVariableLeft).'#' . $i . $this->tagVariableRight, $xmlRow);
         }
         $result .= $this->getSlice($rowEnd);
 
@@ -543,4 +543,14 @@ class Template
 
         return $search;
     }
+
+	/**
+	 * @param string $val
+	 *
+	 * @return bool
+	 */
+	public function valueExists($val)
+	{
+		return preg_match('~' . preg_quote($val, '~') . '~', $this->getDocumentXml()) > 0;
+	}
 }
