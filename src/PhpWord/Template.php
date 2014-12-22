@@ -201,7 +201,8 @@ class Template
      */
     public function cloneRow($search, $numberOfClones)
     {
-        $left = $this->getLeftTagRegexp('/');
+		$this->documentXML = $this->clearVariables($this->documentXML);
+		$left = $this->getLeftTagRegexp('/');
         $right = $this->getRightTagRegexp('/');
         $search = $this->stripSearch($search);
         $search = preg_quote($search, '|');
@@ -266,7 +267,7 @@ class Template
      */
     public function cloneBlock($blockname, $clones = 1, $replace = true)
     {
-        $xmlBlock = null;
+		$xmlBlock = null;
         $left = $this->getLeftTagRegexp('/');
         $right = $this->getRightTagRegexp('/');
         preg_match(
@@ -383,13 +384,7 @@ class Template
      */
     protected function setValueForPart($documentPartXML, $search, $replace, $limit)
     {
-        $pattern = '|'.$this->getLeftTagRegexp('|').'(.*?)'.$this->getRightTagRegexp('|').'|';
-        preg_match_all($pattern, $documentPartXML, $matches);
-        foreach ($matches[0] as $value) {
-            $valueCleaned = preg_replace('/<[^>]+>/', '', $value);
-            $valueCleaned = preg_replace('/<\/[^>]+>/', '', $valueCleaned);
-            $documentPartXML = str_replace($value, $valueCleaned, $documentPartXML);
-        }
+		$documentPartXML = $this->clearVariables($documentPartXML);
 
         if (!String::isUTF8($replace)) {
             $replace = utf8_encode($replace);
@@ -552,5 +547,22 @@ class Template
 	public function valueExists($val)
 	{
 		return preg_match('~' . preg_quote($val, '~') . '~', $this->getDocumentXml()) > 0;
+	}
+
+	/**
+	 * Clear variables from tags
+	 *
+	 * @param string $DocumentPartXml
+	 * @return void
+	 */
+	private function clearVariables($DocumentPartXml) {
+		$pattern = '|'.$this->getLeftTagRegexp('|').'(.*?)'.$this->getRightTagRegexp('|').'|';
+        preg_match_all($pattern, $DocumentPartXml, $matches);
+        foreach ($matches[0] as $value) {
+            $valueCleaned = preg_replace('/<[^>]+>/', '', $value);
+            $valueCleaned = preg_replace('/<\/[^>]+>/', '', $valueCleaned);
+			$DocumentPartXml = str_replace($value, $valueCleaned, $DocumentPartXml);
+        }
+		return $DocumentPartXml;
 	}
 }
